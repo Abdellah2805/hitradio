@@ -1,16 +1,12 @@
-// Weather App Configuration
 const API_KEY = "44c3a0458afdb054fc3ac6ee4833b71a";
 const BASE_URL = "https://api.openweathermap.org/data/2.5";
 const CASABLANCA_COORDS = { lat: 33.589886, lon: -7.603869 };
 
-// App State
 let currentUnit = 'celsius';
 let weatherData = null;
 let forecastData = null;
-// Variable pour stocker les coordonnées de la ville actuellement affichée
 let currentCoords = CASABLANCA_COORDS; 
 
-// DOM Elements
 const elements = {
     loading: document.getElementById('loading'),
     error: document.getElementById('error'),
@@ -38,7 +34,6 @@ const elements = {
     updateTime: document.getElementById('updateTime')
 };
 
-// Weather Icon Mapping
 const weatherIcons = {
     'Clear': 'fas fa-sun',
     'Clouds': 'fas fa-cloud',
@@ -57,7 +52,6 @@ const weatherIcons = {
     'Tornado': 'fas fa-tornado'
 };
 
-// Utility Functions
 const kelvinToCelsius = (kelvin) => kelvin - 273.15;
 const mpsToKmh = (mps) => mps * 3.6;
 const convertTemperature = (celsius) => {
@@ -65,14 +59,12 @@ const convertTemperature = (celsius) => {
 };
 const getUnitSymbol = () => currentUnit === 'fahrenheit' ? '°F' : '°C';
 
-// Weather Background Management
 const updateBackground = (condition) => {
     const body = document.body;
     const lowerCondition = condition.toLowerCase();
     const hour = new Date().getHours();
     const isNight = hour < 6 || hour > 18;
 
-    // Remove existing background classes
     body.classList.remove('bg-sunny', 'bg-cloudy', 'bg-rainy', 'bg-clear', 'bg-night');
 
     if (isNight) {
@@ -88,16 +80,15 @@ const updateBackground = (condition) => {
     }
 };
 
-// API Functions
 const fetchWeatherByCoords = async (lat, lon) => {
     try {
         showLoading();
         hideError();
 
-        // Mettre à jour les coordonnées de la ville actuelle
+    
         currentCoords = { lat, lon };
 
-        // Fetch current weather
+    
         const currentResponse = await fetch(
             `${BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&lang=fr`
         );
@@ -121,7 +112,7 @@ const fetchWeatherByCoords = async (lat, lon) => {
             feelsLike: kelvinToCelsius(currentData.main.feels_like),
         };
 
-        // Fetch 5-day forecast
+    
         const forecastResponse = await fetch(
             `${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&lang=fr`
         );
@@ -129,7 +120,7 @@ const fetchWeatherByCoords = async (lat, lon) => {
         if (forecastResponse.ok) {
             const forecastDataRaw = await forecastResponse.json();
 
-            // Process hourly forecast (next 24 hours)
+            
             const hourlyForecast = forecastDataRaw.list.slice(0, 8).map((item) => ({
                 time: new Date(item.dt * 1000).toLocaleTimeString('fr-FR', {
                     hour: '2-digit',
@@ -140,7 +131,7 @@ const fetchWeatherByCoords = async (lat, lon) => {
                 humidity: item.main.humidity,
             }));
 
-            // Process daily forecast
+         
             const dailyForecast = forecastDataRaw.list
                 .filter((_, index) => index % 8 === 0)
                 .slice(0, 7)
@@ -197,7 +188,7 @@ const fetchWeatherByCityName = async (cityName) => {
     }
 };
 
-// UI Update Functions
+
 const showLoading = () => {
     elements.loading.classList.remove('hidden');
     elements.weatherContent.classList.add('hidden');
@@ -223,10 +214,10 @@ const hideError = () => {
 const updateWeatherDisplay = () => {
     if (!weatherData) return;
 
-    // Update background
+    
     updateBackground(weatherData.condition);
 
-    // Update main weather info
+    
     elements.cityName.textContent = weatherData.city;
     elements.countryName.textContent = weatherData.country;
     elements.mainWeatherIcon.className = weatherIcons[weatherData.condition] || 'fas fa-question';
@@ -234,25 +225,23 @@ const updateWeatherDisplay = () => {
     elements.weatherDescription.textContent = weatherData.description;
     elements.feelsLike.textContent = `Ressenti ${Math.round(convertTemperature(weatherData.feelsLike))}${getUnitSymbol()}`;
 
-    // Update weather details
+    
     elements.humidity.textContent = `${weatherData.humidity}%`;
     elements.windSpeed.textContent = `${Math.round(weatherData.windSpeed)} km/h`;
     elements.visibility.textContent = `${Math.round(weatherData.visibility / 1000)} km`;
     elements.pressure.textContent = `${weatherData.pressure} hPa`;
 
-    // Update unit symbols
+   
     document.querySelectorAll('.unit').forEach(el => {
         el.textContent = getUnitSymbol();
     });
 
-    // Update forecasts
+    
     updateHourlyForecast();
     updateDailyForecast();
-
-    // Check for weather alerts
     checkWeatherAlerts();
 
-    // Update timestamp
+    
     elements.updateTime.textContent = new Date().toLocaleTimeString('fr-FR');
 };
 
@@ -320,25 +309,25 @@ const checkWeatherAlerts = () => {
     }
 };
 
-// Event Handlers
+
 const handleUnitChange = (unit) => {
     currentUnit = unit;
 
-    // Update button states
+    
     elements.celsiusBtn.classList.toggle('active', unit === 'celsius');
     elements.fahrenheitBtn.classList.toggle('active', unit === 'fahrenheit');
 
-    // Update display with new units
+    
     updateWeatherDisplay();
 };
 
 const handleRefresh = () => {
     showLoading();
-    // Le refresh utilise maintenant les coordonnées de la ville actuellement affichée
+    
     fetchWeatherByCoords(currentCoords.lat, currentCoords.lon);
 };
 
-// Event Listeners
+
 elements.celsiusBtn.addEventListener('click', () => handleUnitChange('celsius'));
 elements.fahrenheitBtn.addEventListener('click', () => handleUnitChange('fahrenheit'));
 elements.refreshBtn.addEventListener('click', handleRefresh);
@@ -363,7 +352,7 @@ elements.cityInput.addEventListener('keypress', (event) => {
     }
 });
 
-// Initialize App
+
 document.addEventListener('DOMContentLoaded', () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -372,12 +361,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 fetchWeatherByCoords(latitude, longitude);
             },
             () => {
-                // En cas d'échec de la géolocalisation, revenir à Casablanca par défaut
+                
                 fetchWeatherByCoords(CASABLANCA_COORDS.lat, CASABLANCA_COORDS.lon);
             }
         );
     } else {
-        // Le navigateur ne prend pas en charge la géolocalisation, utiliser Casablanca
+        
         fetchWeatherByCoords(CASABLANCA_COORDS.lat, CASABLANCA_COORDS.lon);
     }
 });
