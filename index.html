@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HitRadio - Météo</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo-section">
+                        <i class="fas fa-radio"></i>
+                        <div>
+                            <h1>HitRadio</h1>
+                            <p>Météo en direct</p>
+                        </div>
+                    </div>
+
+                    <div class="search-bar">
+                        <input type="text" id="cityInput" placeholder="Rechercher une ville...">
+                        <button id="searchBtn" class="search-btn"><i class="fas fa-search"></i></button>
+                    </div>
+
+                    <div class="unit-toggle">
+                        <button id="celsiusBtn" class="unit-btn active">°C</button>
+                        <button id="fahrenheitBtn" class="unit-btn">°F</button>
+                    </div>
+
+                    <button id="refreshBtn" class="refresh-btn">
+                        <i class="fas fa-refresh"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="container">
+                <div id="loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Chargement des données météo...</p>
+                </div>
+
+                <div id="error" class="error hidden">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p id="errorMessage"></p>
+                </div>
+
+                <div id="weatherContent" class="weather-content hidden">
+                    <div class="weather-card">
+                        <div class="weather-header">
+                            <div class="location-info">
+                                <h2 id="cityName"></h2>
+                                <p id="countryName"></p>
+                            </div>
+                            <div class="weather-icon">
+                                <i id="mainWeatherIcon"></i>
+                            </div>
+                        </div>
+
+                        <div class="temperature-section">
+                            <div class="main-temp">
+                                <span id="currentTemp"></span>
+                                <span class="unit"></span>
+                            </div>
+                            <p id="weatherDescription"></p>
+                            <p id="feelsLike"></p>
+                        </div>
+
+                        <div class="weather-details">
+                            <div class="detail-item">
+                                <i class="fas fa-droplet"></i>
+                                <div>
+                                    <p>Humidité</p>
+                                    <p id="humidity"></p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-wind"></i>
+                                <div>
+                                    <p>Vent</p>
+                                    <p id="windSpeed"></p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-eye"></i>
+                                <div>
+                                    <p>Visibilité</p>
+                                    <p id="visibility"></p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-gauge"></i>
+                                <div>
+                                    <p>Pression</p>
+                                    <p id="pressure"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="forecast-grid">
+                        <div class="forecast-card">
+                            <h3>Prévisions horaires</h3>
+                            <div id="hourlyForecast" class="hourly-forecast"></div>
+                        </div>
+
+                        <div class="forecast-card">
+                            <h3>Prévisions 7 jours</h3>
+                            <div id="dailyForecast" class="daily-forecast"></div>
+                        </div>
+                    </div>
+
+                    <div id="weatherAlert" class="weather-alert hidden">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p id="alertMessage"></p>
+                    </div>
+                </div>
+
+                <footer class="footer">
+                    <p>Données météo fournies par OpenWeatherMap • Mise à jour: <span id="updateTime"></span></p>
+                    <p>© 2024 HitRadio - Votre station de radio préférée</p>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <script src="sript.js"></script>
+</body>
+</html>
